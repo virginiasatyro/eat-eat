@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "map.h"
 
@@ -32,6 +33,18 @@ void alocate_map(MAP* m)
     }   
 }
 
+void copy_map(MAP* destiny, MAP* origin)
+{
+    destiny->lines   = origin->lines;
+    destiny->columns = origin->columns;
+
+    alocate_map(destiny);
+
+    for(int i = 0; i < origin->lines; i++){
+        strcpy(destiny->matrix[i], origin->matrix[i]);
+    }
+}
+
 void free_map(MAP* m)
 {
     for(int i = 0; i < m->lines; i++){
@@ -48,15 +61,48 @@ void print_map(MAP* m)
     }
 }
 
-void find_map(MAP* m, POSITION* p, char c)
+bool find_map(MAP* m, POSITION* p, char c)
 {
     for(int i = 0; i < m->lines; i++){
         for(int j = 0; j < m->columns; j++){
             if(m->matrix[i][j] == c){
                 p->x = i;
                 p->y = j;
-                return;
+                return 1;
             }
         }
     }
+    return 0; // map not found
+}
+
+int can_move(MAP* m, char character, int x, int y)
+{
+    return is_valid(m, x, y) && !is_wall(m, x, y) && !is_character(m, character, x, y);
+}
+
+int is_valid(MAP* m, int x, int y)
+{
+    if(x >= m->lines)
+        return 0;
+    if(y >= m->columns)
+        return 0;
+
+    return 1;
+}
+
+int is_character(MAP* m, char character, int x, int y)
+{
+    return m->matrix[x][y] == character;
+}
+
+int is_wall(MAP* m, int x, int y)
+{
+    return m->matrix[x][y] == VERTICAL_WALL || m->matrix[x][y] == HORIZONTAL_WALL;
+}
+
+void move_on_map(MAP* m, int x_origin, int y_origin, int x_destiny, int y_destiny)
+{
+    char character = m->matrix[x_origin][y_origin];
+    m->matrix[x_destiny][y_destiny] = character;
+    m->matrix[x_origin][y_origin] = EMPTY;
 }
