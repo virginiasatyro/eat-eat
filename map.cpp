@@ -106,3 +106,8 @@ void move_on_map(MAP* m, int x_origin, int y_origin, int x_destiny, int y_destin
     m->matrix[x_destiny][y_destiny] = character;
     m->matrix[x_origin][y_origin] = EMPTY;
 }
+
+int is_empty(MAP* m, int x, int y)
+{
+    return m->matrix[x][y] == EMPTY;
+}

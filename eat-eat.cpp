@@ -8,15 +8,15 @@
 
 MAP m;
 POSITION champion;
+int pill = 0;
 
 int game_over()
 {
     POSITION pos;
 
-    int lose_game = !find_map(&m, &pos, CHAMPION);
-    int win_game  = !find_map(&m, &pos, GHOST);
+    int champion_on_map = find_map(&m, &pos, CHAMPION);
 
-    return win_game || lose_game;
+    return !champion_on_map;
 }
 
 int is_direction(char direction)
@@ -101,19 +101,50 @@ void ghosts()
     free_map(&copy);
 }
 
+void explode_pill()
+{
+    if(!pill) return;
+
+    explode_pill_2(champion.x, champion.y,  0,  1, 3);
+    explode_pill_2(champion.x, champion.y,  0, -1, 3);
+    explode_pill_2(champion.x, champion.y,  1,  0, 3);
+    explode_pill_2(champion.x, champion.y, -1,  0, 3);
+
+    pill = 0;
+}
+
+void explode_pill_2(int x, int y, int sum_x, int sum_y, int num)
+{
+    if(num == 0) return;
+
+    int new_x = x + sum_x;
+    int new_y = y + sum_y;
+
+    if(!is_valid(&m, new_x, new_y)) return;
+    if(is_wall(&m, new_x, new_y)) return;
+
+    m.matrix[new_x][new_y] = EMPTY;
+    explode_pill_2(new_x, new_y, sum_x, sum_y, num - 1);
+}
+
 int main()
 {
     read_map(&m);
     find_map(&m, &champion, '@');
 
     do{
+        std::cout << "Pill: " << (pill ? "yes" : "no") << "/n" << std::endl;
         print_map(&m);
 
         char move_direction;
         std::cin >> &move_direction;
 
         move(move_direction);
+
+        if(move_direction == BOMB) explode_pill();
+
         ghosts();
+
     }while(!game_over());
 
     free_map(&m);    
