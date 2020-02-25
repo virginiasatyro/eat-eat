@@ -1,5 +1,3 @@
-void alocate_map();
+int game_over();
 
-void read_map();
-
-void free_map();
+void move(char direction);

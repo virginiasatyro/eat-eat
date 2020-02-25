@@ -3,59 +3,54 @@
 #include <stdlib.h>
 
 #include "eat-eat.h"
+#include "map.h"
 
-char** map;
-int lines = 5;
-int columns = 10;
+MAP m;
+POSITION champion;
 
-void alocate_map()
+int game_over()
 {
-    //  map = malloc(sizeof(char*) * lines);
-    map = (char **)malloc(lines * sizeof(char *));
+    return 0;
+}
 
+void move(char direction)
+{
+    m.matrix[champion.x][champion.y] = '.';
 
-    for(int i = 0; i < lines; i++){
-        map[i] = (char *)malloc(sizeof(char) * columns + 1);
+    switch (direction)
+    {
+        case 'a':
+            m.matrix[champion.x][champion.y - 1] = '@';
+            champion.y--;
+            break;
+        case 'w':
+            m.matrix[champion.x - 1][champion.y] = '@';
+            champion.x--;
+            break;
+        case 's':
+            m.matrix[champion.x + 1][champion.y] = '@';
+            champion.x++;
+            break;
+        case 'd':
+            m.matrix[champion.x][champion.y + 1] = '@';
+            champion.y++;
+            break;
     }
 }
 
-void read_map()
+int main()
 {
-    FILE* f;
-    f = fopen("map.txt", "r");
+    read_map(&m);
+    find_map(&m, &champion, '@');
 
-    if(f == 0){
-        std::cout << "Error reading map!" << std::endl;
-        exit(1);
-    }
+    do{
+        print_map(&m);
 
-    fscanf(f, "%d %d", &lines, &columns);
-    alocate_map();
+        char move_direction;
+        std::cin >> &move_direction;
 
-    for(int i = 0; i < 5; i++){
-        fscanf(f, "%s", map[i]);
-    }
+        move(move_direction);
+    }while(!game_over());
 
-    fclose(f);
-}
-
-void free_map()
-{
-    for(int i = 0; i < lines; i++){
-        free(map[i]);
-    }
-    free(map);
-}
-
-int main(void)
-{
-    std::cout << "Wencome to eat-eat game!" << std::endl;
-
-    read_map();
-
-    for(int i = 0; i < lines; i++){
-        std::cout << map[i] << std::endl;
-    }
-
-    free_map();
+    free_map(&m);    
 }
