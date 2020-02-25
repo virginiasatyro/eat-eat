@@ -18,4 +18,4 @@
 
 - [ ] Fix error - "stack smashing detected" 
 - [ ] Fix error - "segmentation fault"
-- [ ] Try to debug using Valgrind
+- [ ] Try to debug using Valgrind -> valgrind --leak-check=yes ./eat-eat 

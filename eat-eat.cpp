@@ -5,6 +5,7 @@
 
 #include "eat-eat.h"
 #include "map.h"
+#include "ui.h"
 
 MAP m;
 POSITION champion;
@@ -14,9 +15,10 @@ int game_over()
 {
     POSITION pos;
 
-    int champion_on_map = find_map(&m, &pos, CHAMPION);
+    int win  = !find_map(&m, &pos, CHAMPION);
+    int lose = !find_map(&m, &pos, GHOST);
 
-    return !champion_on_map;
+    return win || lose;
 }
 
 int is_direction(char direction)
@@ -26,8 +28,8 @@ int is_direction(char direction)
 
 void move(char direction)
 {
-    if(!is_direction(direction))
-        return;
+    // if(!is_direction(direction))
+    //     return;
 
     int next_x = champion.x;
     int next_y = champion.y;
@@ -50,6 +52,10 @@ void move(char direction)
 
     if(!can_move(&m, CHAMPION, next_x, next_y))
         return;
+
+    if(is_character(&m, PILL, next_x, next_y)){
+        pill = 1;
+    }
 
     move_on_map(&m, champion.x, champion.y, next_x, next_y);
     champion.x = next_x;
@@ -101,18 +107,6 @@ void ghosts()
     free_map(&copy);
 }
 
-void explode_pill()
-{
-    if(!pill) return;
-
-    explode_pill_2(champion.x, champion.y,  0,  1, 3);
-    explode_pill_2(champion.x, champion.y,  0, -1, 3);
-    explode_pill_2(champion.x, champion.y,  1,  0, 3);
-    explode_pill_2(champion.x, champion.y, -1,  0, 3);
-
-    pill = 0;
-}
-
 void explode_pill_2(int x, int y, int sum_x, int sum_y, int num)
 {
     if(num == 0) return;
@@ -127,25 +121,39 @@ void explode_pill_2(int x, int y, int sum_x, int sum_y, int num)
     explode_pill_2(new_x, new_y, sum_x, sum_y, num - 1);
 }
 
+void explode_pill()
+{
+    if(!pill) return;
+
+    explode_pill_2(champion.x, champion.y,  0,  1, 3);
+    explode_pill_2(champion.x, champion.y,  0, -1, 3);
+    explode_pill_2(champion.x, champion.y,  1,  0, 3);
+    explode_pill_2(champion.x, champion.y, -1,  0, 3);
+
+    pill = 0;
+}
+
 int main()
 {
     read_map(&m);
-    find_map(&m, &champion, '@');
+    find_map(&m, &champion, CHAMPION);
 
     do{
-        std::cout << "Pill: " << (pill ? "yes" : "no") << "/n" << std::endl;
+        std::cout << "Pill: " << (pill ? "yes" : "no") << "\n" << std::endl;
         print_map(&m);
 
         char move_direction;
         std::cin >> &move_direction;
 
-        move(move_direction);
+        if(is_direction(move_direction)) move(move_direction);
 
         if(move_direction == BOMB) explode_pill();
 
         ghosts();
 
     }while(!game_over());
+
+    std::cout << "\n\n G A M E  O V E R\n\n" << std::endl;
 
     free_map(&m);    
 }

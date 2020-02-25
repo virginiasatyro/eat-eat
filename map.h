@@ -1,8 +1,12 @@
+#ifndef _MAP_H
+#define _MAP_H
+
 #define CHAMPION        '@'
 #define EMPTY           '.'
 #define VERTICAL_WALL   '|'
 #define HORIZONTAL_WALL '-'
 #define GHOST           'G'
+#define PILL            'P'
 
 struct map{
     char** matrix;
@@ -10,12 +14,12 @@ struct map{
     int columns;
 };
 
-typedef struct map MAP;
-
 struct position{
     int x;
     int y;
 };
+
+typedef struct map MAP;
 
 typedef struct position POSITION;
 
@@ -25,7 +29,7 @@ void read_map(MAP* m);
 
 void alocate_map(MAP* m);
 
-void print_map(MAP* m);
+// void print_map(MAP* m);
 
 bool find_map(MAP* m, POSITION* p, char c);
 
@@ -43,3 +47,5 @@ void copy_map(MAP* destiny, MAP* origin);
 int can_move(MAP* m, char character, int x, int y);
 
 int is_character(MAP* m, char character, int x, int y);
+
+#endif // _MAP_H

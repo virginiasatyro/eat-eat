@@ -10,7 +10,7 @@ void read_map(MAP* m)
     FILE* f;
     f = fopen("map.txt", "r");
     if(f == 0){
-        std::cout << "Error reading map" << std::endl;
+        std::cout << "Error reading map.\n" << std::endl;
         exit(1);
     }
 
@@ -54,12 +54,12 @@ void free_map(MAP* m)
     free(m->matrix);
 }
 
-void print_map(MAP* m)
-{
-    for(int i = 0; i < m->lines; i++){
-        std::cout << m->matrix[i] << std::endl;
-    }
-}
+// void print_map(MAP* m)
+// {
+//     for(int i = 0; i < m->lines; i++){
+//         std::cout << m->matrix[i] << std::endl;
+//     }
+// }
 
 bool find_map(MAP* m, POSITION* p, char c)
 {
@@ -82,9 +82,9 @@ int can_move(MAP* m, char character, int x, int y)
 
 int is_valid(MAP* m, int x, int y)
 {
-    if(x >= m->lines)
+    if(x >= m->lines || x < 0) // or added to test memory error
         return 0;
-    if(y >= m->columns)
+    if(y >= m->columns || y < 0)
         return 0;
 
     return 1;
@@ -107,7 +107,7 @@ void move_on_map(MAP* m, int x_origin, int y_origin, int x_destiny, int y_destin
     m->matrix[x_origin][y_origin] = EMPTY;
 }
 
-int is_empty(MAP* m, int x, int y)
-{
-    return m->matrix[x][y] == EMPTY;
-}
+// int is_empty(MAP* m, int x, int y)
+// {
+//     return m->matrix[x][y] == EMPTY;
+// }
