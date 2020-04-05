@@ -4,53 +4,92 @@ using namespace std;
 
 #include "eat-eat.h"
 
-char** map;
-int lines;
-int columns;
-
-void readMap()
+void Map::set_lines(unsigned int lines)
 {
-    FILE* f;
-    f = fopen("map.txt", "r");
-    if(f == 0)
+    this->lines = lines;
+}
+
+void Map::set_columns(unsigned int columns)
+{
+    this->columns = columns;
+}
+
+unsigned int Map::get_lines()
+{
+    return lines;
+}
+
+unsigned int Map::get_columns()
+{
+    return columns;
+}
+
+void Map::read_map()
+{
+    FILE* file;
+    file = fopen("map.txt", "r");
+
+    if(file == 0)
     {
-        cout << "Error reading map!" << endl;
+        cout << "Error reading file!" << endl;
         exit(1);
     }
 
-    fscanf(f, "%d %d", &lines, &columns);
-    alocateMap();
-
-    for(int i = 0; i < 5; i++)
-        fscanf(f, "%s", map[i]);
-
-    fclose(f);
+    unsigned int aux_lines, aux_columns;
+    fscanf(file, "%d %d", &aux_lines, &aux_columns);
+    set_lines(aux_lines);
+    set_columns(aux_columns);
 }
 
-void alocateMap()
-{
-    map = (char**)malloc(sizeof(char*) * lines);
+// void readMap()
+// {
+//     FILE* f;
+//     f = fopen("map.txt", "r");
+//     if(f == 0)
+//     {
+//         cout << "Error reading map!" << endl;
+//         exit(1);
+//     }
 
-    for(int i = 0; i < lines; i++)
-        map[i] = (char*)malloc(sizeof(char) * columns + 1);
-}
+//     fscanf(f, "%d %d", &lines, &columns);
+//     alocateMap();
 
-void freeMap()
-{
-    for(int i = 0; i < lines; i++)
-        free(map[i]);
+//     for(int i = 0; i < 5; i++)
+//         fscanf(f, "%s", map[i]);
+
+//     fclose(f);
+// }
+
+// void alocateMap()
+// {
+//     map = (char**)malloc(sizeof(char*) * lines);
+
+//     for(int i = 0; i < lines; i++)
+//         map[i] = (char*)malloc(sizeof(char) * columns + 1);
+// }
+
+// void freeMap()
+// {
+//     for(int i = 0; i < lines; i++)
+//         free(map[i]);
     
-    free(map);
-}
+//     free(map);
+// }
 
 int main()
 {
-    readMap();
+    Map map;
 
-    for(int i = 0; i < lines; i++)
-        cout << map[i] << endl;
+    map.read_map();
+    cout << "Columns: " << map.get_columns() << endl;
+    cout << "Lines: " << map.get_lines() << endl;
 
-    freeMap();
+    // readMap();
+
+    // for(int i = 0; i < lines; i++)
+    //     cout << map[i] << endl;
+
+    // freeMap();
 
     return 0;
 }
