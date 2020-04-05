@@ -1,24 +1,10 @@
-#ifndef _EAT_EAT_H
-#define _EAT_EAT_H
+#ifndef _EAT_EAT
+#define _EAT_EAT
 
-#define UP    'w'
-#define DOWN  's'
-#define RIGHT 'd'
-#define LEFT  'a'
-#define BOMB  'b'
+void alocateMap();
 
-int game_over();
+void readMap();
 
-void move(char direction);
+void freeMap();
 
-int is_direction(char direction);
-
-void ghosts();
-
-// int where_ghost_go(int x_current, int y_current, int* x_destiny, int* y_destiny);
-
-void explode_pill();
-
-void explode_pill_2(int x, int y, int sum_x, int sum_y, int num);
-
-#endif // _EAT_EAT_H
+#endif // _EAT_EAT
