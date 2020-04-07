@@ -14,6 +14,11 @@ void Map::set_columns(unsigned int columns)
     this->columns = columns;
 }
 
+void Map::set_map_number(unsigned int map_number)
+{
+    this->map_number = map_number;
+}
+
 unsigned int Map::get_lines()
 {
     return lines;
@@ -22,6 +27,11 @@ unsigned int Map::get_lines()
 unsigned int Map::get_columns()
 {
     return columns;
+}
+
+unsigned int Map::get_map_number()
+{
+    return map_number;
 }
 
 void Map::read_map()
@@ -39,6 +49,14 @@ void Map::read_map()
     fscanf(file, "%d %d", &aux_lines, &aux_columns);
     set_lines(aux_lines);
     set_columns(aux_columns);
+}
+
+void Map::alocate_map()
+{
+    map = (char**)malloc(sizeof(char*) * lines);
+
+    for(int i = 0; i < lines; i++)
+        map[i] = (char*)malloc(sizeof(char) * columns + 1);
 }
 
 // void readMap()
