@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "ui.h"
+#include "map.h"
 
 char draw_wall[4][7] = {
 	{"......" },
